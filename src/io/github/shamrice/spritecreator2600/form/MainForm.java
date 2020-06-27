@@ -1,7 +1,10 @@
 package io.github.shamrice.spritecreator2600.form;
 
-import io.github.shamrice.spritecreator2600.ApplicationState;
+import io.github.shamrice.spritecreator2600.state.ApplicationState;
 import io.github.shamrice.spritecreator2600.form.item.CustomTableModelFactory;
+import io.github.shamrice.spritecreator2600.generator.CodeGenerator;
+import io.github.shamrice.spritecreator2600.generator.CodeGeneratorBuilder;
+import io.github.shamrice.spritecreator2600.generator.GenerateType;
 import io.github.shamrice.spritecreator2600.renderer.CustomJTableRenderer;
 
 import javax.swing.*;
@@ -15,8 +18,6 @@ public class MainForm {
 
     public MainForm() {
         TableModel model = CustomTableModelFactory.getTableModel(generateType);
-
-
 
         spriteTable.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
@@ -64,58 +65,27 @@ public class MainForm {
                 } else {
                     spriteTable.setValueAt("X", row, col);
                 }
-
-
                 //super.mouseClicked(e);
             }
         });
-
-
 
         CustomJTableRenderer customJTableRenderer = new CustomJTableRenderer();
         spriteTable.setDefaultRenderer(Object.class, customJTableRenderer);
         spriteTable.setModel(model);
         setEditorTableWidth();
 
-
         generateCodeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Button action: " + e.getActionCommand());
-
-                String outputString = "";
-
-
-                if (generateType == GenerateType.SPRITE) {
-                    for (int y = spriteTable.getRowCount() - 1; y >= 0; y--) {
-                        outputString += "%";
-                        for (int x = 0; x < spriteTable.getColumnCount(); x++) {
-                            String val = (String) spriteTable.getValueAt(y, x);
-                            if (val == null || !val.equals("X")) {
-                                outputString += "0";
-                            } else {
-                                outputString += "1";
-                            }
-                        }
-                        outputString += "\n";
-                    }
-                } else {
-                    for (int y = 0; y < spriteTable.getRowCount(); y++) {
-                        for (int x = 0; x < spriteTable.getColumnCount(); x++) {
-                            String val = (String) spriteTable.getValueAt(y, x);
-                            if (val == null || !val.equals("X")) {
-                                outputString += ".";
-                            } else {
-                                outputString += "X";
-                            }
-                        }
-                        outputString += "\n";
-                    }
-                }
-
+                CodeGenerator codeGenerator = new CodeGeneratorBuilder()
+                        .withGenerateType(generateType)
+                        .withEditorTable(spriteTable)
+                        .build();
+                String outputString = codeGenerator.generateFromTable();
                 codeTextArea.setText(outputString);
             }
         });
+
         resetButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -127,6 +97,7 @@ public class MainForm {
                 codeTextArea.setText("");
             }
         });
+
         aboutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -137,6 +108,7 @@ public class MainForm {
                 frame.setVisible(true);
             }
         });
+
         switchTypeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -152,54 +124,19 @@ public class MainForm {
 
             }
         });
+
         loadFromDataButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String inputData = codeTextArea.getText();
-                if (inputData != null && !inputData.isEmpty()) {
-
-                    inputData = inputData.replace("%", "").replace("\t", "").replace(" ", "").trim();
-
-                    if (generateType == GenerateType.SPRITE) {
-
-                        //reverse the lines of the input data from bottom to top.
-                        String[] dataRows = inputData.split("\n");
-                        String flippedInputData = "";
-                        for (int i = dataRows.length - 1; i >= 0; i--) {
-                            flippedInputData += dataRows[i];
-                        }
-
-                        //set table values based on input string.
-                        for (int y = 0; y < 8; y++) {
-                            for (int x = 0; x < 8; x++) {
-                                char data = flippedInputData.charAt((y * 8) + x);
-                                if (data == '1') {
-                                    spriteTable.setValueAt("X", y, x);
-                                } else {
-                                    spriteTable.setValueAt("", y, x);
-                                }
-                            }
-                        }
-                    } else {
-                        inputData = inputData.replace("\n", "");
-                        for (int y = 0; y < 11; y++) {
-                            for (int x = 0; x < 32; x++) {
-                                char data = inputData.charAt((y * 32) + x);
-                                if (data == 'X') {
-                                    spriteTable.setValueAt("X", y, x);
-                                } else {
-                                    spriteTable.setValueAt(".", y, x);
-                                }
-                            }
-                        }
-                    }
-                }
+                CodeGenerator codeGenerator = new CodeGeneratorBuilder()
+                        .withGenerateType(generateType)
+                        .withSourceString(inputData)
+                        .build();
+                codeGenerator.populate(spriteTable);
             }
         });
 
-
-        spriteTable.addMouseMotionListener(new MouseMotionAdapter() {
-        });
     }
 
     private void setEditorTableWidth() {

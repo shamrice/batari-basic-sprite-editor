@@ -1,4 +1,4 @@
-package io.github.shamrice.spritecreator2600;
+package io.github.shamrice.spritecreator2600.state;
 
 public class ApplicationState {
 

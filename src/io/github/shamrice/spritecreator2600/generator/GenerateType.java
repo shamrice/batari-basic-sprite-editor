@@ -1,4 +1,4 @@
-package io.github.shamrice.spritecreator2600.form;
+package io.github.shamrice.spritecreator2600.generator;
 
 public enum GenerateType {
     SPRITE("Sprite Mode"),

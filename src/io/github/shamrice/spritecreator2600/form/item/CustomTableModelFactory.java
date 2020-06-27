@@ -1,6 +1,6 @@
 package io.github.shamrice.spritecreator2600.form.item;
 
-import io.github.shamrice.spritecreator2600.form.GenerateType;
+import io.github.shamrice.spritecreator2600.generator.GenerateType;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
