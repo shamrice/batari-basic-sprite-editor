@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="batari-basic-sprite-editor:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/batari_basic_sprite_editor_jar</output-path>
+    <root id="archive" name="batari-basic-sprite-editor.jar">
+      <element id="module-output" name="batari-basic-sprite-editor" />
+    </root>
+  </artifact>
+</component>

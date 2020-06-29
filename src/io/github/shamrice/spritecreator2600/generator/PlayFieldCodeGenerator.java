@@ -34,7 +34,7 @@ class PlayFieldCodeGenerator implements CodeGenerator {
             inputString = inputString.replace("%", "").replace("\t", "").replace(" ", "").trim();
             inputString = inputString.replace("\n", "");
 
-            for (int y = 0; y < 11; y++) {
+            for (int y = 0; y < 12; y++) {
                 for (int x = 0; x < 32; x++) {
                     char data = inputString.charAt((y * 32) + x);
                     if (data == 'X') {

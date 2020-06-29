@@ -19,7 +19,7 @@ public class CustomTableModelFactory {
                 break;
 
             case PLAY_FIELD:
-                rows = 11;
+                rows = 12;
                 cols = 32;
                 break;
         }
